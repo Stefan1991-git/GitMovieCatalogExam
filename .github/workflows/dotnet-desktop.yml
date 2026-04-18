@@ -1,42 +1,27 @@
-name: .NET Core Desktop
+Movie Catalog API CI
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-
-    runs-on: windows-latest
-
-    env:
-      Solution_Name: MovieCatalogExam.slnx
-      Test_Project_Path: MovieCatalogExam/MovieCatalogExam.csproj
-      Wap_Project_Directory: MovieCatalogExam.Package
-      Wap_Project_Path: MovieCatalogExam.Package/MovieCatalogExam.Package.wapproj
+  build-and-test:
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout the repository
+        uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0'
 
-    - uses: microsoft/setup-msbuild@v2
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - run: dotnet test
+      - name: Build the solution
+        run: dotnet build --configuration Release --no-restore
 
-    - run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-
-    - run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      - name: Execute all tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
