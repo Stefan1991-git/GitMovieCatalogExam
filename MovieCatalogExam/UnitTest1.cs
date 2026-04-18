@@ -1,5 +1,4 @@
 using MovieCatalogExam.Models;
-using MovieCatalogExam.Models;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.Net;
