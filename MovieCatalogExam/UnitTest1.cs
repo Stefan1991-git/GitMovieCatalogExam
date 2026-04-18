@@ -16,7 +16,6 @@ public class MovieCatalogTests
     [OneTimeSetUp]
     public void Setup()
     {
-        // Използваме твоите данни Steven@Steven / 123400
         string jwtToken = GetJwtToken("Steven@Steven", "123400");
 
         var options = new RestClientOptions("http://144.91.123.158:5000")
